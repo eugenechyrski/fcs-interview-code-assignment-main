@@ -26,7 +26,6 @@ public class CreateWarehouseUseCase implements CreateWarehouseOperation {
     WarehouseStore warehouseStore;
 
     @Transactional
-
     @Override
     public void create(WarehouseRecord warehouse) {
         if (warehouse == null) {

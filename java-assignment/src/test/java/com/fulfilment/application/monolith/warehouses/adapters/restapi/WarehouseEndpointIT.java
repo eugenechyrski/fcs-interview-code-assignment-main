@@ -112,7 +112,7 @@ public class WarehouseEndpointIT {
                 .when()
                 .post(path)
                 .then()
-                .statusCode(200)
+                .statusCode(201)
                 .body(containsString("MWH.999"),
                         containsString("AMSTERDAM-001"));
     }
