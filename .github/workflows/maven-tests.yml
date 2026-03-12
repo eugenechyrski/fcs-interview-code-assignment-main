@@ -39,5 +39,4 @@ jobs:
         id: coverage
 
       - name: Log coverage
-        run:
-           echo "Coverage: ${{ steps.coverage.outputs.coverage }}%"
+        run: echo "Coverage: ${{ steps.coverage.outputs.coverage }}%"
