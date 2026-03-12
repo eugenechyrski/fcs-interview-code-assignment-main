@@ -1,36 +1,125 @@
 package com.fulfilment.application.monolith.products;
+import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.core.IsNot.not;
-
-import io.quarkus.test.junit.QuarkusTest;
-import org.junit.jupiter.api.Test;
 
 @QuarkusTest
 public class ProductEndpointTest {
 
-  @Test
-  public void testCrudProduct() {
-    final String path = "product";
+    private static final String PATH = "product";
 
-    // List all, should have all 3 products the database has initially:
-    given()
-        .when()
-        .get(path)
-        .then()
-        .statusCode(200)
-        .body(containsString("TONSTAD"), containsString("KALLAX"), containsString("BESTÅ"));
+    @Test
+    void testGetNonExistingProduct() {
+        given()
+                .when().get(PATH + "/999999")
+                .then()
+                .statusCode(404);
+    }
 
-    // Delete the TONSTAD:
-    given().when().delete(path + "/1").then().statusCode(204);
+    @Test
+    void testCreateProduct() {
+        String newProductJson = """
+                {
+                  "name": "New Product",
+                  "description": "A new product",
+                  "price": 10.0,
+                  "stock": 5
+                }
+                """;
 
-    // List all, TONSTAD should be missing now:
-    given()
-        .when()
-        .get(path)
-        .then()
-        .statusCode(200)
-        .body(not(containsString("TONSTAD")), containsString("KALLAX"), containsString("BESTÅ"));
-  }
+        given()
+                .contentType("application/json")
+                .body(newProductJson)
+                .when().post(PATH)
+                .then()
+                .statusCode(201)
+                .body(containsString("New Product"), containsString("A new product"));
+    }
+
+    @Test
+    void testCreateProductWithIdShouldFail() {
+        String invalidProductJson = """
+                {
+                  "id": 10,
+                  "name": "Invalid Product"
+                }
+                """;
+
+        given()
+                .contentType("application/json")
+                .body(invalidProductJson)
+                .when().post(PATH)
+                .then()
+                .statusCode(422);
+    }
+
+    @Test
+    void testUpdateProduct() {
+        String updateJson = """
+                {
+                  "name": "Updated Product",
+                  "description": "Updated description",
+                  "price": 20.0,
+                  "stock": 15
+                }
+                """;
+
+        given()
+                .contentType("application/json")
+                .body(updateJson)
+                .when().put(PATH + "/1")
+                .then()
+                .statusCode(200)
+                .body(containsString("Updated Product"), containsString("Updated description"));
+    }
+
+    @Test
+    void testUpdateNonExistingProduct() {
+        String updateJson = """
+                {
+                  "name": "Does not exist"
+                }
+                """;
+
+        given()
+                .contentType("application/json")
+                .body(updateJson)
+                .when().put(PATH + "/999999")
+                .then()
+                .statusCode(404);
+    }
+
+    @Test
+    void testUpdateWithoutNameShouldFail() {
+        String invalidUpdateJson = """
+                {
+                  "description": "No name"
+                }
+                """;
+
+        given()
+                .contentType("application/json")
+                .body(invalidUpdateJson)
+                .when().put(PATH + "/1")
+                .then()
+                .statusCode(422);
+    }
+
+    @Test
+    void testDeleteProduct() {
+        given()
+                .when().delete(PATH + "/1")
+                .then()
+                .statusCode(204);
+    }
+
+    @Test
+    void testDeleteNonExistingProduct() {
+        given()
+                .when().delete(PATH + "/999999")
+                .then()
+                .statusCode(404);
+    }
 }

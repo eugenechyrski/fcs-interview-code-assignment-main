@@ -20,7 +20,7 @@ import java.util.List;
 public class StoreResource {
 
     @Inject
-    Event<StoreChangedEvent> storeChangedEvent;
+    CdiStoreEventPublisher cdiStoreEventPublisher;
 
     private static final Logger LOGGER = Logger.getLogger(StoreResource.class.getName());
 
@@ -46,7 +46,7 @@ public class StoreResource {
             throw new WebApplicationException("Id was invalidly set on request.", 422);
         }
         store.persist();
-        storeChangedEvent.fire(new StoreChangedEvent(store, StoreOperation.CREATE));
+        cdiStoreEventPublisher.storeChanged(store, StoreOperation.CREATE);
         return Response.ok(store).status(201).build();
     }
 
@@ -67,7 +67,7 @@ public class StoreResource {
         entity.name = updatedStore.name;
         entity.quantityProductsInStock = updatedStore.quantityProductsInStock;
 
-        storeChangedEvent.fire(new StoreChangedEvent(updatedStore, StoreOperation.CREATE));
+        cdiStoreEventPublisher.storeChanged(updatedStore, StoreOperation.CREATE);
 
         return entity;
     }
@@ -93,7 +93,7 @@ public class StoreResource {
         if (entity.quantityProductsInStock != 0) {
             entity.quantityProductsInStock = updatedStore.quantityProductsInStock;
         }
-        storeChangedEvent.fire(new StoreChangedEvent(updatedStore, StoreOperation.CREATE));
+        cdiStoreEventPublisher.storeChanged(updatedStore, StoreOperation.CREATE);
 
         return entity;
     }

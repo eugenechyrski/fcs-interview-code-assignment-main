@@ -22,7 +22,6 @@ public class ArchiveWarehouseUseCase implements ArchiveWarehouseOperation {
     @Inject
     WarehouseStore warehouseStore;
 
-
     @Transactional
     @Override
     public void archive(WarehouseRecord warehouse) throws UnknownWarehouseException {
