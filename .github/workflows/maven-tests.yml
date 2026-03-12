@@ -1,34 +1,43 @@
-name: Java CI with Maven + JaCoCo
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
+    branches: ["main"]
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
-  test:
+  build-and-report:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: java-assignment
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Setup Java
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
+          java-version: "17"
           distribution: temurin
-          java-version: 17
           cache: maven
 
-      - name: Run Maven tests and generate JaCoCo exec
-        run: mvn -B clean verify jacoco:report
-        working-directory: ./java-assignment
+      - name: Run Maven tests
+        run: mvn -B clean verify
 
-      - name: Show JaCoCo coverage in console
-        uses: dorny/paths-filter@v2
+      - name: Prepare jacoco coverage
+        uses: cicirello/jacoco-badge-generator@v2
+        id: coverage
 
-      - name: Jacoco Action
-        uses: devops-infra/action-jacoco@v1
-        with:
-          report_path: './java-assignment/target/site/jacoco/jacoco.xml'
+      - name: Log coverage
+        run:
+           echo "Coverage: ${{ steps.coverage.outputs.coverage }}%"
