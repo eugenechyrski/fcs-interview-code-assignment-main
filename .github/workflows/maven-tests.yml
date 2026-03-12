@@ -21,6 +21,10 @@ jobs:
           java-version: 17
           cache: maven
 
-      - name: Run Maven tests
-        run: mvn -B clean test
+      - name: Run Maven tests with JaCoCo
+        run: mvn -B clean verify jacoco:report jacoco:check \
+          -Djacoco.check.skip=false \
+          -Djacoco.check.rules= \
+          -Djacoco.dataFile=target/jacoco.exec
         working-directory: ./java-assignment
+
