@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Java CI with Maven + JaCoCo
 
 on:
   push:
@@ -21,10 +21,14 @@ jobs:
           java-version: 17
           cache: maven
 
-      - name: Run Maven tests with JaCoCo
-        run: mvn -B clean verify jacoco:report jacoco:check \
-          -Djacoco.check.skip=false \
-          -Djacoco.check.rules= \
-          -Djacoco.dataFile=target/jacoco.exec
+      - name: Run Maven tests and generate JaCoCo exec
+        run: mvn -B clean verify jacoco:report
         working-directory: ./java-assignment
 
+      - name: Show JaCoCo coverage in console
+        uses: dorny/paths-filter@v2
+
+      - name: Jacoco Action
+        uses: devops-infra/action-jacoco@v1
+        with:
+          report_path: './java-assignment/target/site/jacoco/jacoco.xml'
