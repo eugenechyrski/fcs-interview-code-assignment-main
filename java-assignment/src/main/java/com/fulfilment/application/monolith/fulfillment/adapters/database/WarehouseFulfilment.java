@@ -24,15 +24,5 @@ public class WarehouseFulfilment {
     public LocalDateTime createdAt;
     public LocalDateTime updatedAt;
 
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof WarehouseFulfilment that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(product, that.product) && Objects.equals(store, that.store) && Objects.equals(warehouse, that.warehouse) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, product, store, warehouse, createdAt, updatedAt);
-    }
 }
 
