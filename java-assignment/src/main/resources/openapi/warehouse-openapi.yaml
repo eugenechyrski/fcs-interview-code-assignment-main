@@ -5,6 +5,25 @@ info:
   version: 1.0.0
 
 paths:
+  /fulfilment:
+    post:
+      summary: Assign a product to a store via a warehouse
+      operationId: assignFulfilment
+      tags:
+        - Fulfilment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WarehouseFulfilmentRequest'
+      responses:
+        '201':
+          description: Fulfilment successfully assigned
+        '400':
+          description: Bad request (constraint violation)
+        '500':
+          description: Internal server error
   /warehouse:
     get:
       summary: List all warehouses units
@@ -106,6 +125,25 @@ paths:
           description: Invalid request parameters
 components:
   schemas:
+    WarehouseFulfilmentRequest:
+      type: object
+      required:
+        - product
+        - store
+        - warehouse
+      properties:
+        product:
+          type: string
+          example: ProductA
+          description: Name or code of the product
+        store:
+          type: string
+          example: Store1
+          description: Name or code of the store
+        warehouse:
+          type: string
+          example: Warehouse1
+          description: Name or code of the warehouse
     Warehouse:
       type: object
       properties:

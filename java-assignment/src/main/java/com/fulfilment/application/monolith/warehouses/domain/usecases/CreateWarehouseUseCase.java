@@ -25,8 +25,7 @@ public class CreateWarehouseUseCase implements CreateWarehouseOperation {
 
     @Inject
     LocationResolver locationResolver;
-    @Inject
-    ListWarehousesUseCase listWarehousesUseCase;
+
     @Inject
     WarehouseStore warehouseStore;
 
