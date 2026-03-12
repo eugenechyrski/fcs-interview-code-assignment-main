@@ -1,20 +1,22 @@
-INSERT INTO store(id, name, quantityProductsInStock) VALUES (1, 'TONSTAD', 10);
-INSERT INTO store(id, name, quantityProductsInStock) VALUES (2, 'KALLAX', 5);
-INSERT INTO store(id, name, quantityProductsInStock) VALUES (3, 'BESTÅ', 3);
-INSERT INTO store(id, name, quantityProductsInStock) VALUES (4, 'Store4', 3);
-INSERT INTO store(id, name, quantityProductsInStock) VALUES (5, 'Store5', 3);
-INSERT INTO store(id, name, quantityProductsInStock) VALUES (6, 'Store6', 3);
+INSERT INTO store(id, name, quantityProductsInStock) VALUES
+(1, 'TONSTAD', 10),
+(2, 'KALLAX', 5),
+(3, 'BESTÅ', 3),
+(4, 'Store4', 3),
+(5, 'Store5', 3),
+(6, 'Store6', 3);
 ALTER SEQUENCE store_seq RESTART WITH 7;
 
-INSERT INTO product(id, name, stock) VALUES (1, 'TONSTAD', 10);
-INSERT INTO product(id, name, stock) VALUES (2, 'KALLAX', 5);
-INSERT INTO product(id, name, stock) VALUES (3, 'BESTÅ', 3);
-INSERT INTO product(id, name, stock) VALUES (4, 'Product4', 3);
-INSERT INTO product(id, name, stock) VALUES (5, 'Product5', 3);
-INSERT INTO product(id, name, stock) VALUES (6, 'Product6', 3);
-INSERT INTO product(id, name, stock) VALUES (7, 'Product7', 3);
-INSERT INTO product(id, name, stock) VALUES (8, 'Product8', 3);
-INSERT INTO product(id, name, stock) VALUES (9, 'Product9', 3);
+INSERT INTO product(id, name, stock) VALUES
+(1, 'TONSTAD', 10),
+(2, 'KALLAX', 5),
+(3, 'BESTÅ', 3),
+(4, 'Product4', 3),
+(5, 'Product5', 3),
+(6, 'Product6', 3),
+(7, 'Product7', 3),
+(8, 'Product8', 3),
+(9, 'Product9', 3);
 ALTER SEQUENCE product_seq RESTART WITH 10;
 
 INSERT INTO warehouse(id, businessUnitCode, location, capacity, stock, createdAt, archivedAt) VALUES

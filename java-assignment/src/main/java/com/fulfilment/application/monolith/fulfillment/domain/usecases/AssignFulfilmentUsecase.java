@@ -39,7 +39,7 @@ public class AssignFulfilmentUsecase implements AssignFulfilmentOperation {
             throw new InvalidWarehouseIdException();
         }
         if (Store.findById(storeId) == null) {
-             throw new BusinessLogicException("Store not found");
+            throw new BusinessLogicException("Store not found");
         }
         if (productRepository.findById(productId) == null) {
             throw new BusinessLogicException("Product not found");

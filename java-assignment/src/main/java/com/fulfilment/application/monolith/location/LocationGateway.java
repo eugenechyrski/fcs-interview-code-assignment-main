@@ -51,6 +51,6 @@ public class LocationGateway implements LocationResolver {
     @Override
     public void unlock(String identifier) {
         Optional.ofNullable(locationLocks.get(identifier)).orElseThrow(() -> new RuntimeException("This thread does not hold lock on location: " + identifier)).unlock();
-        log.debug("Location {} unlocked",identifier);
+        log.debug("Location {} unlocked", identifier);
     }
 }

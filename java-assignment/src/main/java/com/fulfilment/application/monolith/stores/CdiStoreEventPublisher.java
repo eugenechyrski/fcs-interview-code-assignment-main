@@ -7,12 +7,12 @@ import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class CdiStoreEventPublisher  {
+public class CdiStoreEventPublisher {
     @Inject
     Event<StoreChangedEvent> event;
 
     public void storeChanged(Store store, StoreOperation storeOperation) {
-        event.fire(new StoreChangedEvent(store,storeOperation));
+        event.fire(new StoreChangedEvent(store, storeOperation));
     }
 }
 

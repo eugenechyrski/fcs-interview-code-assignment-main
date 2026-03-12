@@ -3,6 +3,7 @@ package com.fulfilment.application.monolith.fulfillment.domain.usecases;
 import com.fulfilment.application.monolith.fulfillment.adapters.database.WarehouseFulfilment;
 import com.fulfilment.application.monolith.fulfillment.adapters.database.WarehouseFulfilmentRepository;
 import com.fulfilment.application.monolith.warehouses.exception.BusinessLogicException;
+import com.fulfilment.application.monolith.warehouses.exception.UnknownWarehouseException;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -113,5 +114,41 @@ public class AssignFulfilmentUsecaseTest {
         assertEquals(2, repository.countByProductAndStore(1, 1));
         assertEquals(1, repository.countByProductAndStore(2, 1));
         assertEquals(2, repository.countDistinctWarehousesByStore(1));
+    }
+
+    @Test
+    @Transactional
+    void testInvalidWarehouse() {
+
+        UnknownWarehouseException ex = assertThrows(
+                UnknownWarehouseException.class,
+                () -> usecase.assignFulfilment(1, 1, "INVALID")
+        );
+
+        assertNotNull(ex);
+    }
+
+    @Test
+    @Transactional
+    void testStoreNotFound() {
+
+        BusinessLogicException ex = assertThrows(
+                BusinessLogicException.class,
+                () -> usecase.assignFulfilment(1, 999, "MWH.001")
+        );
+
+        assertEquals("Store not found", ex.getMessage());
+    }
+
+    @Test
+    @Transactional
+    void testProductNotFound() {
+
+        BusinessLogicException ex = assertThrows(
+                BusinessLogicException.class,
+                () -> usecase.assignFulfilment(999, 1, "MWH.001")
+        );
+
+        assertEquals("Product not found", ex.getMessage());
     }
 }

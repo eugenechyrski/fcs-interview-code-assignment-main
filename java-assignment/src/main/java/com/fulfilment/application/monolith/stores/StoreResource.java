@@ -1,10 +1,8 @@
 package com.fulfilment.application.monolith.stores;
 
-import com.fulfilment.application.monolith.stores.events.StoreChangedEvent;
 import com.fulfilment.application.monolith.stores.events.StoreOperation;
 import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
