@@ -28,10 +28,10 @@ public class AssignFulfilmentUsecaseTest {
         repository.deleteAll();
     }
 
-    private WarehouseFulfilment createFulfilment(String product, String store, String warehouse) {
+    private WarehouseFulfilment createFulfilment(long productId, long storeId, String warehouse) {
         WarehouseFulfilment wf = new WarehouseFulfilment();
-        wf.product = product;
-        wf.store = store;
+        wf.productId = productId;
+        wf.storeId = storeId;
         wf.warehouse = warehouse;
         wf.createdAt = LocalDateTime.now();
         wf.updatedAt = LocalDateTime.now();
@@ -42,46 +42,46 @@ public class AssignFulfilmentUsecaseTest {
     @Test
     @Transactional
     void testAssignFulfilmentSuccess() {
-        usecase.assignFulfilment("ProductA", "Store1", "Warehouse1");
+        usecase.assignFulfilment(1, 1, "MWH.001");
 
-        boolean exists = repository.existsByProductStoreWarehouse("ProductA", "Store1", "Warehouse1");
+        boolean exists = repository.existsByProductStoreWarehouse(1, 1, "MWH.001");
         assertTrue(exists);
     }
 
     @Test
     @Transactional
     void testAssignDuplicateFulfilment() {
-        createFulfilment("ProductA", "Store1", "Warehouse1");
+        createFulfilment(1, 1, "MWH.001");
 
         // Should not throw, just log and skip
-        usecase.assignFulfilment("ProductA", "Store1", "Warehouse1");
+        usecase.assignFulfilment(1, 1, "MWH.001");
 
-        long count = repository.countByProductAndStore("ProductA", "Store1");
+        long count = repository.countByProductAndStore(1, 1);
         assertEquals(1, count);
     }
 
     @Test
     @Transactional
     void testProductWarehouseConstraintExceeded() {
-        createFulfilment("ProductA", "Store1", "Warehouse1");
-        createFulfilment("ProductA", "Store1", "Warehouse2");
+        createFulfilment(1, 1, "MWH.001");
+        createFulfilment(1, 1, "MWH.012");
 
         BusinessLogicException ex = assertThrows(BusinessLogicException.class, () ->
-                usecase.assignFulfilment("ProductA", "Store1", "Warehouse3")
+                usecase.assignFulfilment(1, 1, "MWH.023")
         );
 
-        assertTrue(ex.getMessage().contains("Cannot assign product 'ProductA' to more than 2 warehouses"));
+        assertTrue(ex.getMessage().contains("Cannot assign product '1' to more than 2 warehouses"));
     }
 
     @Test
     @Transactional
     void testStoreWarehouseConstraintExceeded() {
-        createFulfilment("ProductA", "Store1", "Warehouse1");
-        createFulfilment("ProductB", "Store1", "Warehouse2");
-        createFulfilment("ProductC", "Store1", "Warehouse3");
+        createFulfilment(1, 1, "MWH.001");
+        createFulfilment(2, 1, "MWH.012");
+        createFulfilment(3, 1, "MWH.023");
 
         BusinessLogicException ex = assertThrows(BusinessLogicException.class, () ->
-                usecase.assignFulfilment("ProductD", "Store1", "Warehouse4")
+                usecase.assignFulfilment(4, 1, "MWH.024")
         );
 
         assertTrue(ex.getMessage().contains("Cannot assign more than 3 warehouses for store"));
@@ -90,28 +90,28 @@ public class AssignFulfilmentUsecaseTest {
     @Test
     @Transactional
     void testWarehouseProductConstraintExceeded() {
-        createFulfilment("ProductA", "Store1", "Warehouse1");
-        createFulfilment("ProductB", "Store2", "Warehouse1");
-        createFulfilment("ProductC", "Store3", "Warehouse1");
-        createFulfilment("ProductD", "Store4", "Warehouse1");
-        createFulfilment("ProductE", "Store5", "Warehouse1");
+        createFulfilment(1, 1, "MWH.001");
+        createFulfilment(2, 2, "MWH.001");
+        createFulfilment(3, 3, "MWH.001");
+        createFulfilment(4, 4, "MWH.001");
+        createFulfilment(5, 5, "MWH.001");
 
         BusinessLogicException ex = assertThrows(BusinessLogicException.class, () ->
-                usecase.assignFulfilment("ProductF", "Store6", "Warehouse1")
+                usecase.assignFulfilment(6, 6, "MWH.001")
         );
 
-        assertTrue(ex.getMessage().contains("Warehouse 'Warehouse1' cannot store more than 5 different products"));
+        assertTrue(ex.getMessage().contains("Warehouse 'MWH.001' cannot store more than 5 different products"));
     }
 
     @Test
     @Transactional
     void testMultipleSuccessfulAssignments() {
-        usecase.assignFulfilment("ProductA", "Store1", "Warehouse1");
-        usecase.assignFulfilment("ProductA", "Store1", "Warehouse2");
-        usecase.assignFulfilment("ProductB", "Store1", "Warehouse1");
+        usecase.assignFulfilment(1, 1, "MWH.001");
+        usecase.assignFulfilment(1, 1, "MWH.012");
+        usecase.assignFulfilment(2, 1, "MWH.001");
 
-        assertEquals(2, repository.countByProductAndStore("ProductA", "Store1"));
-        assertEquals(1, repository.countByProductAndStore("ProductB", "Store1"));
-        assertEquals(2, repository.countDistinctWarehousesByStore("Store1"));
+        assertEquals(2, repository.countByProductAndStore(1, 1));
+        assertEquals(1, repository.countByProductAndStore(2, 1));
+        assertEquals(2, repository.countDistinctWarehousesByStore(1));
     }
 }

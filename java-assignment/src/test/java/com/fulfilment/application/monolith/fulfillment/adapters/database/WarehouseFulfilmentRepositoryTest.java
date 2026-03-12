@@ -23,10 +23,10 @@ public class WarehouseFulfilmentRepositoryTest {
         repository.deleteAll();
     }
 
-    private WarehouseFulfilment createFulfilment(String product, String store, String warehouse) {
+    private WarehouseFulfilment createFulfilment(long productId, long storeId, String warehouse) {
         WarehouseFulfilment wf = new WarehouseFulfilment();
-        wf.product = product;
-        wf.store = store;
+        wf.productId = productId;
+        wf.storeId = storeId;
         wf.warehouse = warehouse;
         wf.createdAt = LocalDateTime.now();
         wf.updatedAt = LocalDateTime.now();
@@ -37,39 +37,39 @@ public class WarehouseFulfilmentRepositoryTest {
     @Test
     @Transactional
     void testSaveAndExists() {
-        createFulfilment("ProductA", "Store1", "Warehouse1");
+        createFulfilment(1, 1, "Warehouse1");
 
-        assertTrue(repository.existsByProductStoreWarehouse("ProductA", "Store1", "Warehouse1"));
-        assertFalse(repository.existsByProductStoreWarehouse("ProductA", "Store1", "Warehouse2"));
+        assertTrue(repository.existsByProductStoreWarehouse(1, 1, "Warehouse1"));
+        assertFalse(repository.existsByProductStoreWarehouse(1, 1, "Warehouse2"));
     }
 
     @Test
     @Transactional
     void testCountByProductAndStore() {
-        createFulfilment("ProductA", "Store1", "Warehouse1");
-        createFulfilment("ProductA", "Store1", "Warehouse2");
+        createFulfilment(1, 1, "Warehouse1");
+        createFulfilment(1, 1, "Warehouse2");
 
-        long count = repository.countByProductAndStore("ProductA", "Store1");
+        long count = repository.countByProductAndStore(1, 1);
         assertEquals(2, count);
     }
 
     @Test
     @Transactional
     void testCountDistinctWarehousesByStore() {
-        createFulfilment("ProductA", "Store1", "Warehouse1");
-        createFulfilment("ProductB", "Store1", "Warehouse2");
-        createFulfilment("ProductC", "Store1", "Warehouse1"); // same warehouse
+        createFulfilment(1, 1, "Warehouse1");
+        createFulfilment(2, 1, "Warehouse2");
+        createFulfilment(3, 1, "Warehouse1"); // same warehouse
 
-        long distinctCount = repository.countDistinctWarehousesByStore("Store1");
+        long distinctCount = repository.countDistinctWarehousesByStore(1);
         assertEquals(2, distinctCount); // Warehouse1 & Warehouse2
     }
 
     @Test
     @Transactional
     void testCountByWarehouse() {
-        createFulfilment("ProductA", "Store1", "Warehouse1");
-        createFulfilment("ProductB", "Store2", "Warehouse1");
-        createFulfilment("ProductC", "Store1", "Warehouse2");
+        createFulfilment(1, 1, "Warehouse1");
+        createFulfilment(2, 2, "Warehouse1");
+        createFulfilment(3, 1, "Warehouse2");
 
         long warehouse1Count = repository.countByWarehouse("Warehouse1");
         long warehouse2Count = repository.countByWarehouse("Warehouse2");

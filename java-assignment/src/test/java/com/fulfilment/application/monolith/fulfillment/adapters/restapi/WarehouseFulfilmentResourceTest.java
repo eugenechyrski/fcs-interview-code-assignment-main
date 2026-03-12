@@ -25,15 +25,15 @@ class WarehouseFulfilmentResourceTest {
     void testAssignFulfilment_callsAssignFulfilmentOperation() {
         // Given
         WarehouseFulfilmentRequest request = new WarehouseFulfilmentRequest();
-        request.setProduct("ProductA");
-        request.setStore("Store1");
-        request.setWarehouse("Warehouse1");
+        request.setProduct(1);
+        request.setStore(1);
+        request.setWarehouse("MWH.001");
 
         // When
         resource.assignFulfilment(request);
 
         // Then
         verify(assignFulfilmentOperation, times(1))
-                .assignFulfilment("ProductA", "Store1", "Warehouse1");
+                .assignFulfilment(1, 1, "MWH.001");
     }
 }

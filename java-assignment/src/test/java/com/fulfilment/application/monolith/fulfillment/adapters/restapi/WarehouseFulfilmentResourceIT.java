@@ -12,9 +12,9 @@ public class WarehouseFulfilmentResourceIT {
     @Test
     void assignNewValidFulfilmentAndExpectContractinViolation() {
         WarehouseFulfilmentRequest request = new WarehouseFulfilmentRequest();
-        request.setProduct("ProductH");
-        request.setStore("Store2");
-        request.setWarehouse("Warehouse2");
+        request.setProduct(8);
+        request.setStore(2);
+        request.setWarehouse("MWH.012");
         given()
                 .contentType("application/json")
                 .body(request)
@@ -27,9 +27,9 @@ public class WarehouseFulfilmentResourceIT {
     @Test
     void rejectDuplicateAssignment() {
         WarehouseFulfilmentRequest request = new WarehouseFulfilmentRequest();
-        request.setProduct("ProductB");
-        request.setStore("Store1");
-        request.setWarehouse("Warehouse2");
+        request.setProduct(2);
+        request.setStore(1);
+        request.setWarehouse("MWH.012");
 
         given()
                 .contentType("application/json")
@@ -43,9 +43,9 @@ public class WarehouseFulfilmentResourceIT {
     @Test
     void rejectProductWarehouseConstraintExceeded() {
         WarehouseFulfilmentRequest request = new WarehouseFulfilmentRequest();
-        request.setProduct("ProductA");
-        request.setStore("Store1");
-        request.setWarehouse("Warehouse3");
+        request.setProduct(1);
+        request.setStore(1);
+        request.setWarehouse("MWH.023");
 
         given()
                 .contentType("application/json")
@@ -59,9 +59,9 @@ public class WarehouseFulfilmentResourceIT {
     @Test
     void rejectStoreWarehouseConstraintExceeded() {
         WarehouseFulfilmentRequest request = new WarehouseFulfilmentRequest();
-        request.setProduct("ProductH");
-        request.setStore("Store1");
-        request.setWarehouse("Warehouse4");
+        request.setProduct(8);
+        request.setStore(1);
+        request.setWarehouse("MWH.024");
         given()
                 .contentType("application/json")
                 .body(request)
@@ -74,9 +74,9 @@ public class WarehouseFulfilmentResourceIT {
     @Test
     void rejectWarehouseProductConstraintExceeded() {
         WarehouseFulfilmentRequest request = new WarehouseFulfilmentRequest();
-        request.setProduct("ProductI");
-        request.setStore("Store6");
-        request.setWarehouse("Warehouse1");
+        request.setProduct(9);
+        request.setStore(6);
+        request.setWarehouse("MWH.001");
         given()
                 .contentType("application/json")
                 .body(request)

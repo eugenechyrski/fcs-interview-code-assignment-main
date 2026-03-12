@@ -133,17 +133,19 @@ components:
         - warehouse
       properties:
         product:
-          type: string
-          example: ProductA
-          description: Name or code of the product
+          type: integer
+          format: in64
+          example: 1
+          description: Id of the product
         store:
-          type: string
-          example: Store1
-          description: Name or code of the store
+          type: integer
+          format: in64
+          example: 1
+          description: Id of the store
         warehouse:
           type: string
-          example: Warehouse1
-          description: Name or code of the warehouse
+          example: "MWH.001"
+          description: ID of the warehouse unit
     Warehouse:
       type: object
       properties:
