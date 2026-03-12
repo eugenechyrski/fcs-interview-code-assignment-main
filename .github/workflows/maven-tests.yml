@@ -37,6 +37,8 @@ jobs:
       - name: Prepare jacoco coverage
         uses: cicirello/jacoco-badge-generator@v2
         id: coverage
+        with:
+          jacoco-csv-file: java-assignment/target/site/jacoco/jacoco.csv
 
       - name: Log coverage
         run: |
